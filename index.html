@@ -769,6 +769,61 @@
     .mobilemenu{width:100%;max-width:100%}
     .adminpanel{width:100%;max-width:100%}
   }
+
+
+  /* ===================== EK: yeni ogeler ===================== */
+  .blk{display:block}
+  .figure.inline{margin:32px 0}
+  /* .sw global olarak position:absolute; .figure konumlandirilmadigi icin
+     gorsel kutusu akistan cikiyordu -- figur icinde akisa geri aliyoruz */
+  .figure .sw{position:relative}
+  .figure img{width:100%;height:auto;display:block;border-radius:12px;
+              max-height:80vh;object-fit:contain;background:var(--surface)}
+  .figure.full img{border-radius:0}
+
+  .edimg button.edins{top:auto;right:auto;bottom:5px;left:5px;width:auto;height:auto;
+    padding:4px 9px;border-radius:7px;font:600 10.5px var(--sans);background:rgba(20,18,32,.82)}
+  .edimg button.edins:hover{background:var(--coral)}
+  .edtag{position:absolute;right:5px;bottom:5px;font:600 10px ui-monospace,Menlo,monospace;
+    color:#fff;background:rgba(20,18,32,.62);padding:3px 6px;border-radius:5px;pointer-events:none}
+  .edhint{font-size:12px;line-height:1.65;color:var(--muted);margin:10px 0 0;
+    padding:10px 13px;border:1px dashed var(--line);border-radius:10px}
+  .edhint code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;
+    background:var(--surface);padding:1px 5px;border-radius:5px;border:1px solid var(--line)}
+  .igupload{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;
+    margin:0 0 14px;border:2px dashed var(--line);border-radius:10px;cursor:pointer;
+    font:600 13px var(--sans);color:var(--muted);transition:.15s}
+  .igupload:hover{border-color:var(--coral);color:var(--coral)}
+
+  /* ===================== EK: mobil gorsel duzeni ===================== */
+  @media(max-width:640px){
+    img{height:auto}
+    .body{padding:26px 0 6px}
+    .body p{font-size:17px;line-height:1.75;margin:0 0 20px}
+    .body ul li{font-size:16.5px;line-height:1.65}
+    .body h2{font-size:24px;margin:30px 0 12px}
+    .body blockquote{margin:22px 0;padding-left:18px}
+    .body .dropcap:first-letter{font-size:56px;padding:6px 11px 0 0}
+
+    .figure{margin:22px 0}
+    .figure.inline{margin:22px 0}
+    .figure img{max-height:72vh;border-radius:10px}
+    .figure .sw{height:auto;aspect-ratio:16/10}
+    .figure.full{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);width:100vw}
+    .figure.full .sw{height:auto;aspect-ratio:4/3}
+    .figure.duo{grid-template-columns:1fr;gap:10px}
+    .figure.duo .sw{height:auto;aspect-ratio:16/10}
+    .figure figcaption{font-size:12.5px;margin-top:8px;padding:0 4px}
+
+    .card .cimg{height:auto;aspect-ratio:16/9}
+    .edimggrid{grid-template-columns:1fr 1fr}
+    .edimg button.edins{font-size:10px;padding:3px 7px}
+    .igupload{font-size:12.5px;padding:11px}
+  }
+  @media(max-width:400px){
+    .figure img{max-height:66vh}
+    .edimggrid{grid-template-columns:1fr}
+  }
 </style>
 </helmet>
 
@@ -958,7 +1013,7 @@
         <sc-if value="{{ artHasBody }}" hint-placeholder-val="{{ true }}">
           <div>
             <sc-for list="{{ artBody }}" as="p" hint-placeholder-count="4">
-              <p class="{{ p.cls }}">{{ p.text }}</p>
+              <div class="blk">{{ p.node }}</div>
             </sc-for>
             <sc-for list="{{ artImages }}" as="im" hint-placeholder-count="0">
               <figure class="figure">{{ im.img }}</figure>
@@ -1254,7 +1309,8 @@
               <button sc-camel-on-click="{{ closeBlockMenu }}"><span class="bi2">❝</span>Alıntı</button>
             </div>
           </sc-if>
-          <textarea class="edcontent" rows="14" placeholder="Hikâyeni anlatmaya başla... (paragrafları boş satırla ayır)" value="{{ edBody }}" sc-camel-on-input="{{ onEdBody }}"></textarea>
+          <textarea class="edcontent" rows="14" ref="{{ bodyRef }}" placeholder="Hikâyeni anlatmaya başla... (paragrafları boş satırla ayır)&#10;&#10;Görseli araya koymak için imleci istediğin yere getir, sağdaki görselin altındaki &quot;↵ Araya ekle&quot; düğmesine bas." value="{{ edBody }}" sc-camel-on-input="{{ onEdBody }}"></textarea>
+        <p class="edhint">Sağdaki görsellerden birini metnin istediğin yerine koymak için imleci oraya getir ve <b>↵ Araya ekle</b>'ye bas. Metne <code>[görsel:1]</code> gibi bir satır eklenir; yayında o satır görselin kendisi olarak görünür. Eklemediklerin yazının sonunda listelenir.</p>
         </div>
         <sc-if value="{{ showEdImage }}" hint-placeholder-val="{{ false }}">
           <div class="edslot"><image-slot id="ed-inline" shape="rect" placeholder="görseli sürükle veya tıkla"></image-slot></div>
@@ -1269,7 +1325,7 @@
           <sc-if value="{{ edHasImages }}" hint-placeholder-val="{{ false }}">
             <div class="edimggrid">
               <sc-for list="{{ edImages }}" as="im" hint-placeholder-count="2">
-                <div class="edimg">{{ im.thumb }}<button sc-camel-on-click="{{ im.remove }}">✕</button></div>
+                <div class="edimg">{{ im.thumb }}<button sc-camel-on-click="{{ im.remove }}">✕</button><button class="edins" sc-camel-on-click="{{ im.insert }}">↵ Araya ekle</button><span class="edtag">{{ im.tag }}</span></div>
               </sc-for>
             </div>
           </sc-if>
@@ -1469,6 +1525,9 @@
       <div class="sheet-body">
         <div class="sheet-left">
           <h5>Makaledeki görseller</h5>
+          <sc-if value="{{ adminMode }}" hint-placeholder-val="{{ false }}">
+            <label class="igupload">📤 Cihazdan görsel yükle<input type="file" accept="image/*" sc-camel-on-change="{{ onIgUpload }}" style="display:none"></label>
+          </sc-if>
           <div class="imgpick">
             <sc-for list="{{ igImages }}" as="im" hint-placeholder-count="0">
               <div class="{{ im.cls }}" sc-camel-on-click="{{ im.select }}">
@@ -1658,7 +1717,7 @@ class Component extends DCLogic {
     this.canvasRef=React.createRef(); this.toastRef=React.createRef(); this.toastMsgRef=React.createRef(); this.toastIcoRef=React.createRef();
     this.likeRef=React.createRef(); this.likeCntRef=React.createRef(); this.bmRef=React.createRef();
     this.copyRef=React.createRef(); this.copyTxtRef=React.createRef(); this.commentsRef=React.createRef();
-    this.topRef=React.createRef(); this.darkBtnRef=React.createRef(); this.adminBtnRef=React.createRef(); this.plusRef=React.createRef();
+    this.topRef=React.createRef(); this.darkBtnRef=React.createRef(); this.adminBtnRef=React.createRef(); this.plusRef=React.createRef(); this.bodyRef=React.createRef();
     this.sparkCanvasRef=React.createRef();
     this.cName=React.createRef(); this.cEmail=React.createRef(); this.cSubject=React.createRef(); this.cMsg=React.createRef();
     this.commentBoxRef=React.createRef(); this.commentNameRef=React.createRef(); this.edCoverInput=React.createRef();
@@ -1819,6 +1878,55 @@ class Component extends DCLogic {
       else { const r=new FileReader(); r.onload=()=>this.setState(s=>({ed:{...s.ed,images:[...(s.ed.images||[]),r.result]}})); r.readAsDataURL(f); }
     });
     e.target.value=''; };
+  // --- paragraf arasi gorsel ---
+  IMG_RE = /^\[(?:g(?:ö|o)rsel|img|image)\s*:\s*(\d+)\]$/i;
+  buildBlocks(cur){
+    const imgs = cur.images || [];
+    const used = {};
+    const blocks = [];
+    (cur.body||'').split(/\n+/).map(s=>s.trim()).filter(Boolean).forEach(line=>{
+      const m = line.match(this.IMG_RE);
+      if(m){
+        const n = parseInt(m[1],10) - 1;
+        if(imgs[n]){ used[n]=1; blocks.push({t:'img', url:imgs[n], n:n+1}); return; }
+        return; // gecersiz numara: satiri hic gosterme
+      }
+      blocks.push({t:'p', text:line});
+    });
+    return {blocks, used};
+  }
+  insertImgMarker=(i)=>{
+    const marker = '[görsel:'+(i+1)+']';
+    const ta = this.bodyRef.current;
+    const cur = this.state.ed.body || '';
+    let pos = (ta && typeof ta.selectionStart === 'number') ? ta.selectionStart : cur.length;
+    if(pos > cur.length) pos = cur.length;
+    const before = cur.slice(0,pos).replace(/\s+$/,'');
+    const after  = cur.slice(pos).replace(/^\s+/,'');
+    const next = (before ? before + '\n\n' : '') + marker + (after ? '\n\n' + after : '\n');
+    const caret = (before ? before.length + 2 : 0) + marker.length;
+    this.setState(s=>({ed:{...s.ed, body:next}}), ()=>{
+      const t=this.bodyRef.current;
+      if(t){ try{ t.focus(); t.setSelectionRange(caret,caret); }catch(e){} }
+    });
+    this.toast('Görsel '+(i+1)+' imlecin olduğu yere eklendi', true);
+  };
+  // --- story: cihazdan gorsel (admin) ---
+  onIgUpload=(e)=>{
+    const f = e.target.files && e.target.files[0];
+    e.target.value='';
+    if(!f) return;
+    if(!this.state.adminMode){ this.toast('Bu özellik yalnızca admin modunda', false); return; }
+    const r = new FileReader();
+    r.onload = () => {
+      const id = 'local'+Date.now();
+      this.setState(s=>({ igImages:[...s.igImages, {id, label:'Yüklenen', url:r.result}], igSel:id }),
+                    ()=>setTimeout(()=>this.draw(), 80));
+      this.toast('Görsel yüklendi', true);
+    };
+    r.onerror = () => this.toast('Görsel okunamadı', false);
+    r.readAsDataURL(f);
+  };
   removeEdImage=(i)=>this.setState(s=>{ const arr=[...(s.ed.images||[])]; arr.splice(i,1); return {ed:{...s.ed,images:arr}}; });
   publish=()=>{
     const ed=this.state.ed;
@@ -2277,6 +2385,7 @@ class Component extends DCLogic {
     const feat=arts[fi]||arts[0]||{title:'',cat:'',excerpt:'',author:'',initials:'',avc:'#FF6B6B',date:'',read:'',cover:''};
     const cur=arts.find(a=>a.id===this.state.curId)||arts[0]||{id:'',title:'',cat:'',excerpt:'',author:'',authorId:'',initials:'',avc:'#FF6B6B',date:'',read:'',body:'',cover:'',likes:0,comments:[]};
     const curBody=(cur.body||'').split(/\n+/).map(s=>s.trim()).filter(Boolean);
+    const curBlocks=this.buildBlocks(cur);
     const authorRec=this.curAuthorRec()||{id:'',name:'',role:'',bio:'',avc:'#FF6B6B',ig:'',tw:'',in:''};
     const authorArts=arts.filter(a=>a.authorId===authorRec.id);
     const liked=this.isLiked(cur.id);
@@ -2298,7 +2407,7 @@ class Component extends DCLogic {
       homeCls:v==='home'?'on':'', catCls:v==='categories'?'on':'', aboutCls:v==='about'?'on':'', contactCls:v==='contact'?'on':'',
       goCategories:this.goCategories, goAbout:this.goAbout, goContact:this.goContact, goSearch:this.goSearch, goEditor:this.goEditor,
       sendContact:this.sendContact, saveDraft:this.saveDraft, publish:this.publish,
-      blockMenu:this.state.blockMenu, showEdImage:this.state.showEdImage, plusRef:this.plusRef,
+      blockMenu:this.state.blockMenu, showEdImage:this.state.showEdImage, plusRef:this.plusRef, bodyRef:this.bodyRef,
       toggleBlockMenu:this.toggleBlockMenu, closeBlockMenu:this.closeBlockMenu, addImage:this.addImage, toggleDark:this.toggleDark, toggleAdmin:this.toggleAdmin,
       goLogin:this.goLogin, handleLogin:this.handleLogin, handleLogout:this.handleLogout, loginUser:this.state.loginUser, loginPass:this.state.loginPass,
       menuOpen:this.state.menuOpen, toggleMenu:this.toggleMenu, closeMenu:this.closeMenu,
@@ -2343,14 +2452,19 @@ class Component extends DCLogic {
       authAvId:'author-av-'+(authorRec.id||'x'),
       authorArticles:authorArts.map(mkCard), authHasArts:authorArts.length>0, authNoArts:authorArts.length===0,
 
-      artBody:curBody.map((p,i)=>({text:p, cls:i===0?'dropcap':''})), artHasBody:curBody.length>0, artNoBody:curBody.length===0,
-      artImages:(cur.images||[]).map(u=>({img:React.createElement('img',{src:u,alt:'',style:{width:'100%',height:'auto',display:'block',borderRadius:'12px'}})})), artHasImages:(cur.images||[]).length>0,
+      artBody:(()=>{ let first=true; return curBlocks.blocks.map((b,i)=>{
+        if(b.t==='img') return {node:React.createElement('figure',{className:'figure inline',key:'f'+i},
+          React.createElement('img',{src:b.url,alt:'',loading:'lazy',style:{width:'100%',height:'auto',display:'block',borderRadius:'12px'}}))};
+        const cls=first?'dropcap':''; first=false;
+        return {node:React.createElement('p',{className:cls,key:'p'+i}, b.text)};
+      }); })(), artHasBody:curBlocks.blocks.length>0, artNoBody:curBlocks.blocks.length===0,
+      artImages:(cur.images||[]).map((u,i)=>({u,i})).filter(x=>!curBlocks.used[x.i]).map(x=>({img:React.createElement('img',{src:x.u,alt:'',loading:'lazy',style:{width:'100%',height:'auto',display:'block',borderRadius:'12px'}})})), artHasImages:(cur.images||[]).some((u,i)=>!curBlocks.used[i]),
       edTitle:ed.title, edCat:ed.cat, edExcerpt:ed.excerpt, edBody:ed.body, edTags:ed.tags, edSlug:ed.slug,
       edAuthorId:ed.authorId, edNewAuthor:ed.newAuthor, showNewAuthor:ed.authorId==='new'||(site.authors.length===0),
       authorOpts:authorOpts, hasCover:!!ed.cover, noCover:!ed.cover,
       edCoverImg: ed.cover ? React.createElement('img',{src:ed.cover,alt:'kapak',style:{width:'100%',height:'100%',objectFit:'cover',display:'block'}}) : null,
       onEdCover:this.onEdCover, clearEdCover:this.clearEdCover, onEdImages:this.onEdImages,
-      edImages:(ed.images||[]).map((u,i)=>({url:u, thumb:React.createElement('img',{src:u,alt:'',style:{width:'100%',height:'100%',objectFit:'cover',display:'block'}}), remove:()=>this.removeEdImage(i)})),
+      edImages:(ed.images||[]).map((u,i)=>({url:u, tag:'[görsel:'+(i+1)+']', thumb:React.createElement('img',{src:u,alt:'',style:{width:'100%',height:'100%',objectFit:'cover',display:'block'}}), remove:()=>this.removeEdImage(i), insert:()=>this.insertImgMarker(i)})),
       edHasImages:(ed.images||[]).length>0,
       onEdAuthorId:(e)=>this.setEd('authorId',e), onEdNewAuthor:(e)=>this.setEd('newAuthor',e),
       edSlugText:ed.slug||'yeni-yazi', edSeoTitle:(ed.title||'Başlıksız yazı')+' — '+site.logo, edSeoDesc:ed.excerpt||'Açıklama ekle…',
@@ -2421,7 +2535,7 @@ class Component extends DCLogic {
       postComment:this.postComment, subscribe:this.subscribe,
       shareTwitter:this.shareTwitter, shareFacebook:this.shareFacebook, shareLinkedIn:this.shareLinkedIn,
       shareWhatsApp:this.shareWhatsApp, shareTelegram:this.shareTelegram, copyLink:this.copyLink, nativeShare:this.nativeShare,
-      openIg:this.openIg, closeIg:this.closeIg, igOpen:this.state.igOpen,
+      openIg:this.openIg, closeIg:this.closeIg, igOpen:this.state.igOpen, onIgUpload:this.onIgUpload,
       igDownload:this.igDownload, igOpenApp:this.igOpenApp,
       cards, related:cards.slice(0,3), authorArticles:cards, trending,
       igImages:this.state.igImages.map(im=>({...im, cls:'pick'+(this.state.igSel===im.id?' sel':''), select:()=>this.setSel(im.id), thumb: im.url?React.createElement('img',{src:im.url,alt:'',style:{width:'100%',height:'100%',objectFit:'cover'}}):null})),
