@@ -463,6 +463,9 @@
   .abar .asub{font-size:13px;color:var(--muted)}
   .abar .follow{margin-left:auto;background:var(--navy);color:#fff;border:none;border-radius:999px;padding:9px 20px;font:600 13px var(--sans);cursor:pointer}
   .abar .follow.admin-only{margin-left:auto}
+  .abar .artedit{margin-left:auto;background:var(--navy);color:#fff;border:none;border-radius:999px;padding:9px 18px;font:600 13px var(--sans);cursor:pointer;white-space:nowrap}
+  .abar .artedit:hover{background:var(--coral)}
+  .cadmin button.edit:hover{background:var(--gold);color:#1a1a2e}
   .abar .artdel{background:#fdeaea;color:#d0342c;border:1px solid #f3c0bd;border-radius:999px;padding:9px 16px;font:600 13px var(--sans);cursor:pointer}
   .abar .artdel:hover{background:#d0342c;color:#fff;border-color:#d0342c}
   [data-theme="dark"] .abar .artdel{background:rgba(208,52,44,.16);color:#ff8a82;border-color:rgba(208,52,44,.4)}
@@ -788,7 +791,10 @@
     .edblockmenu{left:0;top:46px;width:min(270px,84vw)}
     .edtop{padding:10px 14px;gap:8px;overflow-x:auto;scrollbar-width:none}
     .edtop::-webkit-scrollbar{display:none}
-    .edtop .saved{display:none}
+    .edtop .saved{display:block;font-size:11.5px;flex:none}
+    .abar{gap:10px}
+    .abar .artedit{padding:9px 14px;font-size:12.5px}
+    .abar .artdel{padding:9px 12px;font-size:12.5px}
     .edtop .prev,.edtop .writebtn{white-space:nowrap;flex:none}
     .logoupload{width:100%;justify-content:center;padding:14px 16px;font-size:14.5px}
 
@@ -935,6 +941,7 @@
         <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
           <div class="card" sc-camel-on-click="{{ c.open }}">
             <div class="cadmin">
+              <button class="edit" title="Düzenle" sc-camel-on-click="{{ c.edit }}">✎</button>
               <button class="star {{ c.starCls }}" title="Öne çıkar" sc-camel-on-click="{{ c.feature }}">★</button>
               <button title="Yukarı" sc-camel-on-click="{{ c.up }}">↑</button>
               <button title="Aşağı" sc-camel-on-click="{{ c.down }}">↓</button>
@@ -1013,8 +1020,8 @@
         <button class="aname" sc-camel-on-click="{{ openArtAuthor }}">{{ artAuthor }}</button>
         <span class="asub">{{ artMeta }}</span>
       </div>
-      <button class="follow admin-only" sc-camel-on-click="{{ noop }}">Takip Et</button>
-      <button class="artdel admin-only" sc-camel-on-click="{{ delCurrent }}">🗑 Yazıyı Sil</button>
+      <button class="artedit admin-only" sc-camel-on-click="{{ editCurrent }}">✎ Yazıyı Düzenle</button>
+      <button class="artdel admin-only" sc-camel-on-click="{{ delCurrent }}">🗑 Sil</button>
     </div>
 
     <div class="artwrap">
@@ -1294,11 +1301,10 @@
   <div>
     <div class="edtop">
       <button class="back" sc-camel-on-click="{{ goHome }}">← Çık</button>
-      <span class="saved">Taslak otomatik kaydedildi ✓</span>
+      <span class="saved">{{ edStatus }}</span>
       <div class="sp"></div>
-      <button class="prev" sc-camel-on-click="{{ openArticle }}">👁 Önizleme</button>
       <button class="prev" sc-camel-on-click="{{ saveDraft }}">Taslak Kaydet</button>
-      <button class="writebtn" sc-camel-on-click="{{ publish }}">Yayınla</button>
+      <button class="writebtn" sc-camel-on-click="{{ publish }}">{{ edPublishLabel }}</button>
     </div>
     <div class="edwrap">
       <div class="edmain">
@@ -1615,7 +1621,7 @@ class Component extends DCLogic {
     igImages: [], blockMenu: false, showEdImage: false,
     searchQuery: '', loginUser: '', loginPass: '',
     site: null, panelOpen: false, panelTab: 'site', menuOpen: false,
-    curId: null, curAuthorId: null, syncCode: '', syncMsg: '', cloudComments:{}, cloudLikes:{}, cloudLiked:{}, ed: { title:'', cat:'Genel', excerpt:'', body:'', authorId:'', newAuthor:'', tags:'', slug:'', cover:'', images:[] }
+    curId: null, curAuthorId: null, edId: null, syncCode: '', syncMsg: '', cloudComments:{}, cloudLikes:{}, cloudLiked:{}, ed: { title:'', cat:'Genel', excerpt:'', body:'', authorId:'', newAuthor:'', tags:'', slug:'', cover:'', images:[] }
   };
   blankEd(){ return { title:'', cat:'Genel', excerpt:'', body:'', authorId:'', newAuthor:'', tags:'', slug:'', cover:'', images:[] }; }
   today(){ const m=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara']; const d=new Date(); return d.getDate()+' '+m[d.getMonth()]; }
@@ -1903,7 +1909,19 @@ class Component extends DCLogic {
   goContact=()=>this.nav('contact');
   goSearch=()=>{ this.setState({catFilter:null}); this.nav('search'); };
   goCat=(name)=>{ this.setState({catFilter:name, searchQuery:'', view:'search', menuOpen:false}); this.views++; try{ localStorage.setItem('dk_views', this.views); }catch(_){} window.scrollTo(0,0); };
-  goEditor=()=>this.nav('editor');
+  goEditor=()=>{ if(this.state.edId) this.setState({ed:this.blankEd(), edId:null, _slugTouched:false}); this.nav('editor'); };
+  /* mevcut yazıyı editöre yükle */
+  editArticle=(id)=>{
+    const a=(this.state.site.articles||[]).find(x=>x.id===id);
+    if(!a){ this.toast('Yazı bulunamadı', false); return; }
+    this.setState({
+      edId:a.id, _slugTouched:true, menuOpen:false,
+      ed:{ title:a.title||'', cat:a.cat||'Genel', excerpt:a.excerpt||'', body:a.body||'',
+           authorId:a.authorId||'', newAuthor:'', tags:(a.tags||[]).join(', '),
+           slug:a.slug||this.slugify(a.title), cover:a.cover||'', images:[...(a.images||[])] }
+    }, ()=>{ this.nav('editor'); });
+  };
+  editCurrent=()=>{ if(this.state.curId) this.editArticle(this.state.curId); };
   noop=()=>{};
   setEd=(k,e)=>{ const val=e.target.value; this.setState(s=>{ const ed={...s.ed,[k]:val}; if(k==='title'&&!s._slugTouched) ed.slug=this.slugify(val); return {ed}; }); };
   setSlug=(e)=>{ const val=e.target.value; this.setState(s=>({ed:{...s.ed,slug:val}, _slugTouched:true})); };
@@ -1943,16 +1961,27 @@ class Component extends DCLogic {
       else { const na={id:'au'+Date.now(), name:nm, role:'Yazar', bio:'', avc:pal[authors.length%pal.length], ig:'', tw:'', in:''}; authors=[...authors,na]; authorId=na.id; }
     }
     const author=authors.find(a=>a.id===authorId)||{name:'Editör',avc:'#FF6B6B'};
-    const a={ id:'a'+Date.now(), cat:(ed.cat||'Genel').trim(), title,
+    const editId=this.state.edId;
+    const prev=editId?(this.state.site.articles||[]).find(x=>x.id===editId):null;
+    const a={ id:(prev?prev.id:'a'+Date.now()), cat:(ed.cat||'Genel').trim(), title,
       excerpt:(ed.excerpt||'').trim()||(ed.body||'').replace(/\n+/g,' ').slice(0,120),
       authorId:authorId, author:author.name, initials:this.initials(author.name), avc:author.avc,
-      date:this.today(), read, body:ed.body||'', slug:ed.slug||this.slugify(title),
+      date:(prev?prev.date:this.today()), read, body:ed.body||'', slug:ed.slug||this.slugify(title),
       tags:(ed.tags||'').split(',').map(t=>t.trim()).filter(Boolean),
-      cover:ed.cover||'', images:(ed.images||[]), likes:0, comments:[] };
-    const arts=[a, ...this.state.site.articles];
+      cover:ed.cover||'', images:(ed.images||[]),
+      likes:(prev?(prev.likes||0):0), comments:(prev?(prev.comments||[]):[]),
+      updatedAt:Date.now() };
+    let arts, feat=this.state.site.featured;
+    if(prev){ arts=this.state.site.articles.map(x=>x.id===prev.id?a:x); }          /* sırasını koru */
+    else { arts=[a, ...this.state.site.articles]; feat=0; }
     try{ localStorage.removeItem('dk_draft'); }catch(_){}
-    this.setSite({articles:arts, authors, featured:0}, ()=>{ this.setState({ed:this.blankEd(), _slugTouched:false, curId:a.id, view:'home', menuOpen:false}); window.scrollTo(0,0); });
-    this.toast('Yazı yayınlandı ve ana sayfada! 🎉', false);
+    this.setSite({articles:arts, authors, featured:feat}, ()=>{
+      this.setState({ed:this.blankEd(), edId:null, _slugTouched:false, curId:a.id,
+                     view:prev?'article':'home', menuOpen:false});
+      window.scrollTo(0,0);
+      if(prev) this.loadCloudArticle(a.id);
+    });
+    this.toast(prev?'Yazı güncellendi ✓':'Yazı yayınlandı ve ana sayfada! 🎉', true);
   };
   /* ---------- authors ---------- */
   authorById(id){ const s=this.state.site; return (s&&s.authors&&s.authors.find(a=>a.id===id))||null; }
@@ -2396,7 +2425,8 @@ class Component extends DCLogic {
       open:()=>this.openArticleId(a.id),
       openAuthor:(e)=>{e.stopPropagation&&e.stopPropagation();this.openAuthorId(a.authorId);},
       bookmark:(e)=>{e.stopPropagation&&e.stopPropagation();this.toggleBm();},
-      del:(e)=>{e.stopPropagation&&e.stopPropagation();this.delArticle(a.id);},
+      edit:(e)=>{e.stopPropagation&&e.stopPropagation();this.editArticle(a.id);},
+      del:(e)=>{e.stopPropagation&&e.stopPropagation();if(window.confirm('Bu yazıyı silmek istediğine emin misin?'))this.delArticle(a.id);},
       up:(e)=>{e.stopPropagation&&e.stopPropagation();this.moveArticle(a.id,-1);},
       down:(e)=>{e.stopPropagation&&e.stopPropagation();this.moveArticle(a.id,1);},
       feature:(e)=>{e.stopPropagation&&e.stopPropagation();this.setFeatured(i);}
@@ -2488,6 +2518,9 @@ class Component extends DCLogic {
       onEdTitle:(e)=>this.setEd('title',e), onEdCat:(e)=>this.setEd('cat',e), onEdExcerpt:(e)=>this.setEd('excerpt',e),
       onEdBody:(e)=>this.setEd('body',e), onEdTags:(e)=>this.setEd('tags',e), onEdSlug:this.setSlug,
       setEd:this.setEd, catOpts:catOpts,
+      editCurrent:this.editCurrent, editArticle:this.editArticle,
+      edPublishLabel:this.state.edId?'Güncelle':'Yayınla',
+      edStatus:this.state.edId?'Mevcut yazı düzenleniyor':'Yeni yazı',
 
       categories:site.categories.map(k=>({id:k.id, name:k.name, count:k.count, desc:k.desc, slot:k.id, open:()=>this.goCat(k.name),
         adminEditable:this.state.adminMode?'true':'false',
