@@ -596,6 +596,10 @@
   .pick.sel{border-color:var(--coral)}
   .pick .chk{position:absolute;top:5px;right:5px;width:20px;height:20px;border-radius:50%;background:var(--coral);color:#fff;display:none;place-items:center;font-size:12px}
   .pick.sel .chk{display:grid}
+  .igupload{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;border:2px dashed var(--line);border-radius:12px;padding:13px 16px;font:600 13.5px var(--sans);color:var(--muted);cursor:pointer;margin-bottom:22px;transition:.14s;background:transparent}
+  .igupload:hover{border-color:var(--coral);color:var(--coral);background:rgba(255,107,107,.04)}
+  .igupload:active{transform:scale(.985)}
+  .pickempty{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 16px}
   .optgrp{margin-bottom:20px}
   .optgrp label{font-size:12.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:8px}
   .seg{display:flex;gap:6px;flex-wrap:wrap}
@@ -749,6 +753,57 @@
     .sheet-right{border-left:none;border-top:1px solid var(--line)}
     .modal{padding:0}.sheet{border-radius:0;max-height:100vh;height:100vh;width:100%}
     .imgpick{grid-template-columns:repeat(3,1fr)}
+
+    /* --- yatay taşmayı kes: sayfanın sağa kaymasını engeller --- */
+    .app{overflow-x:clip}
+    .shead{flex-wrap:wrap;gap:12px;margin:34px 0 20px}
+    .shead h2{white-space:normal;font-size:25px}
+
+    /* --- HAKKIMIZDA (mobil) --- */
+    .pghead{padding:34px 20px 4px}
+    .pghead h1{font-size:32px}
+    .pghead p{font-size:15.5px}
+    .abouthero{grid-template-columns:1fr;gap:22px;padding:14px 20px 0;align-items:start}
+    .abouthero .txt h1{font-size:32px;line-height:1.15;margin-bottom:12px}
+    .abouthero .txt p{font-size:16px;line-height:1.65;margin-bottom:14px}
+    .abouthero .txt .btn{width:100%}
+    .abouthero .ph{height:210px;border-radius:16px;order:-1}
+    .aboutstats{grid-template-columns:1fr;gap:12px;padding:0 20px;margin-top:34px}
+    .aboutstats .st{padding:22px;display:flex;align-items:center;justify-content:space-between;text-align:left;gap:14px}
+    .aboutstats .st b{font-size:34px}
+    .team{padding:0 20px}
+    .clickcounter{margin-bottom:28px}
+
+    /* --- İLETİŞİM (mobil) --- */
+    .contact{grid-template-columns:1fr;gap:26px;padding:20px 20px 10px}
+    .cinfo{padding:22px}
+
+    /* --- EDİTÖR (mobil): sağ panel alta iner, dosya yükleme görünür olur --- */
+    .edwrap{grid-template-columns:1fr}
+    .edmain{padding:26px 20px 24px;max-width:100%}
+    .edtitle{font-size:30px}
+    .edside{border-left:none;border-top:1px solid var(--line);position:static;height:auto;top:auto;padding:22px 20px 80px}
+    .edplus{position:static;margin:0 0 8px;transform:none}
+    .edplus:hover{transform:rotate(90deg)}
+    .edblockmenu{left:0;top:46px;width:min(270px,84vw)}
+    .edtop{padding:10px 14px;gap:8px;overflow-x:auto;scrollbar-width:none}
+    .edtop::-webkit-scrollbar{display:none}
+    .edtop .saved{display:none}
+    .edtop .prev,.edtop .writebtn{white-space:nowrap;flex:none}
+    .logoupload{width:100%;justify-content:center;padding:14px 16px;font-size:14.5px}
+
+    /* --- MAKALE (mobil) --- */
+    .body{padding-top:28px}
+    .body p{font-size:17.5px;line-height:1.78;margin-bottom:20px}
+    .body h2{font-size:24px;margin:30px 0 12px}
+    .body blockquote{font-size:20px;margin:24px 0;padding-left:18px}
+    .body .dropcap:first-letter{font-size:58px;padding-right:10px}
+    .figure{margin:24px 0}
+    .figure .sw{height:220px}
+    .figure.full .sw{height:250px}
+    .figure.duo{grid-template-columns:1fr}
+    .artwrap{padding-bottom:76px}
+    .related{margin-top:40px}
   }
   @media(max-width:560px){
     .grid{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}
@@ -761,6 +816,21 @@
     .biobox{flex-direction:column;text-align:center;align-items:center}
     .wrap{padding:0 16px}.shead{padding:0 16px}
     .brand span{display:none}
+    .shead h2{font-size:22px}
+    .abouthero{padding:12px 16px 0}
+    .abouthero .txt h1{font-size:28px}
+    .abouthero .ph{height:180px}
+    .aboutstats{padding:0 16px}
+    .contact{padding:18px 16px 10px}
+    .pghead{padding:28px 16px 4px}.pghead h1{font-size:28px}
+    .team{padding:0 16px}
+    .edmain{padding:22px 16px 20px}.edside{padding:20px 16px 80px}
+    .edtitle{font-size:26px}
+    .imgpick{grid-template-columns:repeat(3,1fr);gap:8px}
+    .sheet-right{padding:18px 16px 26px}
+    .previewbox{width:200px}
+    .ig-hero{padding:14px 16px}
+    .ig-hero .txt b{font-size:15px}
   }
   @media(max-width:400px){
     .sgrid{grid-template-columns:1fr}
@@ -768,61 +838,6 @@
     .teamgrid{grid-template-columns:1fr}
     .mobilemenu{width:100%;max-width:100%}
     .adminpanel{width:100%;max-width:100%}
-  }
-
-
-  /* ===================== EK: yeni ogeler ===================== */
-  .blk{display:block}
-  .figure.inline{margin:32px 0}
-  /* .sw global olarak position:absolute; .figure konumlandirilmadigi icin
-     gorsel kutusu akistan cikiyordu -- figur icinde akisa geri aliyoruz */
-  .figure .sw{position:relative}
-  .figure img{width:100%;height:auto;display:block;border-radius:12px;
-              max-height:80vh;object-fit:contain;background:var(--surface)}
-  .figure.full img{border-radius:0}
-
-  .edimg button.edins{top:auto;right:auto;bottom:5px;left:5px;width:auto;height:auto;
-    padding:4px 9px;border-radius:7px;font:600 10.5px var(--sans);background:rgba(20,18,32,.82)}
-  .edimg button.edins:hover{background:var(--coral)}
-  .edtag{position:absolute;right:5px;bottom:5px;font:600 10px ui-monospace,Menlo,monospace;
-    color:#fff;background:rgba(20,18,32,.62);padding:3px 6px;border-radius:5px;pointer-events:none}
-  .edhint{font-size:12px;line-height:1.65;color:var(--muted);margin:10px 0 0;
-    padding:10px 13px;border:1px dashed var(--line);border-radius:10px}
-  .edhint code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;
-    background:var(--surface);padding:1px 5px;border-radius:5px;border:1px solid var(--line)}
-  .igupload{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;
-    margin:0 0 14px;border:2px dashed var(--line);border-radius:10px;cursor:pointer;
-    font:600 13px var(--sans);color:var(--muted);transition:.15s}
-  .igupload:hover{border-color:var(--coral);color:var(--coral)}
-
-  /* ===================== EK: mobil gorsel duzeni ===================== */
-  @media(max-width:640px){
-    img{height:auto}
-    .body{padding:26px 0 6px}
-    .body p{font-size:17px;line-height:1.75;margin:0 0 20px}
-    .body ul li{font-size:16.5px;line-height:1.65}
-    .body h2{font-size:24px;margin:30px 0 12px}
-    .body blockquote{margin:22px 0;padding-left:18px}
-    .body .dropcap:first-letter{font-size:56px;padding:6px 11px 0 0}
-
-    .figure{margin:22px 0}
-    .figure.inline{margin:22px 0}
-    .figure img{max-height:72vh;border-radius:10px}
-    .figure .sw{height:auto;aspect-ratio:16/10}
-    .figure.full{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);width:100vw}
-    .figure.full .sw{height:auto;aspect-ratio:4/3}
-    .figure.duo{grid-template-columns:1fr;gap:10px}
-    .figure.duo .sw{height:auto;aspect-ratio:16/10}
-    .figure figcaption{font-size:12.5px;margin-top:8px;padding:0 4px}
-
-    .card .cimg{height:auto;aspect-ratio:16/9}
-    .edimggrid{grid-template-columns:1fr 1fr}
-    .edimg button.edins{font-size:10px;padding:3px 7px}
-    .igupload{font-size:12.5px;padding:11px}
-  }
-  @media(max-width:400px){
-    .figure img{max-height:66vh}
-    .edimggrid{grid-template-columns:1fr}
   }
 </style>
 </helmet>
@@ -1013,23 +1028,23 @@
         <sc-if value="{{ artHasBody }}" hint-placeholder-val="{{ true }}">
           <div>
             <sc-for list="{{ artBody }}" as="p" hint-placeholder-count="4">
-              <div class="blk">{{ p.node }}</div>
+              <p class="{{ p.cls }}">{{ p.text }}</p>
             </sc-for>
             <sc-for list="{{ artImages }}" as="im" hint-placeholder-count="0">
               <figure class="figure">{{ im.img }}</figure>
             </sc-for>
             <sc-if value="{{ artHasImages }}" hint-placeholder-val="{{ false }}"><div></div></sc-if>
-            <sc-if value="{{ adminMode }}" hint-placeholder-val="{{ false }}">
-              <figure class="figure full"><div class="sw"><image-slot id="a-fig-{{ curId }}" shape="rect" placeholder="admin: görsel slotu (yerel)"></image-slot></div></figure>
-            </sc-if>
+            <sc-for list="{{ artSlots }}" as="s" hint-placeholder-count="0">
+              <figure class="figure full"><div class="sw"><image-slot id="{{ s.id }}" shape="rect" placeholder="{{ s.ph }}"></image-slot></div></figure>
+            </sc-for>
           </div>
         </sc-if>
         <sc-if value="{{ artNoBody }}" hint-placeholder-val="{{ false }}">
         <div>
         <p class="dropcap">{{ artSub }}</p>
-        <figure class="figure full">
-          <div class="sw"><image-slot id="a-fig-{{ curId }}" shape="rect" placeholder="admin: görsel"></image-slot></div>
-        </figure>
+        <sc-for list="{{ artSlots }}" as="s" hint-placeholder-count="0">
+          <figure class="figure full"><div class="sw"><image-slot id="{{ s.id }}" shape="rect" placeholder="{{ s.ph }}"></image-slot></div></figure>
+        </sc-for>
         </div>
         </sc-if>
       </div>
@@ -1309,8 +1324,7 @@
               <button sc-camel-on-click="{{ closeBlockMenu }}"><span class="bi2">❝</span>Alıntı</button>
             </div>
           </sc-if>
-          <textarea class="edcontent" rows="14" ref="{{ bodyRef }}" placeholder="Hikâyeni anlatmaya başla... (paragrafları boş satırla ayır)&#10;&#10;Görseli araya koymak için imleci istediğin yere getir, sağdaki görselin altındaki &quot;↵ Araya ekle&quot; düğmesine bas." value="{{ edBody }}" sc-camel-on-input="{{ onEdBody }}"></textarea>
-        <p class="edhint">Sağdaki görsellerden birini metnin istediğin yerine koymak için imleci oraya getir ve <b>↵ Araya ekle</b>'ye bas. Metne <code>[görsel:1]</code> gibi bir satır eklenir; yayında o satır görselin kendisi olarak görünür. Eklemediklerin yazının sonunda listelenir.</p>
+          <textarea class="edcontent" rows="14" placeholder="Hikâyeni anlatmaya başla... (paragrafları boş satırla ayır)" value="{{ edBody }}" sc-camel-on-input="{{ onEdBody }}"></textarea>
         </div>
         <sc-if value="{{ showEdImage }}" hint-placeholder-val="{{ false }}">
           <div class="edslot"><image-slot id="ed-inline" shape="rect" placeholder="görseli sürükle veya tıkla"></image-slot></div>
@@ -1325,7 +1339,7 @@
           <sc-if value="{{ edHasImages }}" hint-placeholder-val="{{ false }}">
             <div class="edimggrid">
               <sc-for list="{{ edImages }}" as="im" hint-placeholder-count="2">
-                <div class="edimg">{{ im.thumb }}<button sc-camel-on-click="{{ im.remove }}">✕</button><button class="edins" sc-camel-on-click="{{ im.insert }}">↵ Araya ekle</button><span class="edtag">{{ im.tag }}</span></div>
+                <div class="edimg">{{ im.thumb }}<button sc-camel-on-click="{{ im.remove }}">✕</button></div>
               </sc-for>
             </div>
           </sc-if>
@@ -1524,10 +1538,7 @@
       </div>
       <div class="sheet-body">
         <div class="sheet-left">
-          <h5>Makaledeki görseller</h5>
-          <sc-if value="{{ adminMode }}" hint-placeholder-val="{{ false }}">
-            <label class="igupload">📤 Cihazdan görsel yükle<input type="file" accept="image/*" sc-camel-on-change="{{ onIgUpload }}" style="display:none"></label>
-          </sc-if>
+          <h5>Görsel seç — makale içinden ya da cihazından</h5>
           <div class="imgpick">
             <sc-for list="{{ igImages }}" as="im" hint-placeholder-count="0">
               <div class="{{ im.cls }}" sc-camel-on-click="{{ im.select }}">
@@ -1537,6 +1548,10 @@
               </div>
             </sc-for>
           </div>
+          <sc-if value="{{ igNoImages }}" hint-placeholder-val="{{ false }}">
+            <p class="pickempty">Bu yazıda kullanılabilir görsel bulunamadı. Aşağıdan cihazından bir görsel seçebilirsin.</p>
+          </sc-if>
+          <label class="igupload">📱 Cihazdan görsel yükle<input type="file" accept="image/*" sc-camel-on-change="{{ onIgUpload }}" style="display:none"></label>
 
           <div class="optgrp">
             <label>Link yazısı konumu</label>
@@ -1680,7 +1695,12 @@ class Component extends DCLogic {
         const base = cts>=lts ? data : localSite; // meta (renk, logo vs) için yeni olan kazanır
         // Yazı listeleri BIRLEŞIR — asla silinmez: id'ye göre birleştir, aynı id'de yeni damgalı taraf kazanır
         const byId={};
-        const put=(a)=>{ if(a&&a.id) byId[a.id]={...(byId[a.id]||{}),...a}; };
+        const put=(a)=>{ if(!(a&&a.id)) return;
+          const prev=byId[a.id]||{}; const m={...prev,...a};
+          /* karşı taraf görselsiz bir sürümse, eldeki görselleri SİLME */
+          if((!m.images||!m.images.length) && prev.images && prev.images.length) m.images=prev.images;
+          if(!m.cover && prev.cover) m.cover=prev.cover;
+          byId[a.id]=m; };
         (cts>=lts ? (localSite.articles||[]) : (data.articles||[])).forEach(put); // önce eski taraf
         (cts>=lts ? (data.articles||[]) : (localSite.articles||[])).forEach(put); // sonra yeni taraf ezer
         const order=[]; const seen={};
@@ -1717,7 +1737,7 @@ class Component extends DCLogic {
     this.canvasRef=React.createRef(); this.toastRef=React.createRef(); this.toastMsgRef=React.createRef(); this.toastIcoRef=React.createRef();
     this.likeRef=React.createRef(); this.likeCntRef=React.createRef(); this.bmRef=React.createRef();
     this.copyRef=React.createRef(); this.copyTxtRef=React.createRef(); this.commentsRef=React.createRef();
-    this.topRef=React.createRef(); this.darkBtnRef=React.createRef(); this.adminBtnRef=React.createRef(); this.plusRef=React.createRef(); this.bodyRef=React.createRef();
+    this.topRef=React.createRef(); this.darkBtnRef=React.createRef(); this.adminBtnRef=React.createRef(); this.plusRef=React.createRef();
     this.sparkCanvasRef=React.createRef();
     this.cName=React.createRef(); this.cEmail=React.createRef(); this.cSubject=React.createRef(); this.cMsg=React.createRef();
     this.commentBoxRef=React.createRef(); this.commentNameRef=React.createRef(); this.edCoverInput=React.createRef();
@@ -1730,8 +1750,11 @@ class Component extends DCLogic {
   }
 
   componentDidMount(){
+    this.purgeLegacyEkKeys();
     this.applyBinds();
     this.cloudInit();
+    /* image-slot köprüsü buluttan yüklenince dolmuş slotları yeniden değerlendir */
+    this._slotTimers=[700,1800,3500,6000].map(t=>setTimeout(()=>this.setState(s=>({_slotTick:(s._slotTick||0)+1})), t));
     const root=this.rootRef.current, co=this.state.site&&this.state.site.colors;
     if(root&&co){ root.style.setProperty('--coral',co.coral); root.style.setProperty('--gold',co.gold); }
     requestAnimationFrame(()=>this.enableEditing());
@@ -1764,6 +1787,7 @@ class Component extends DCLogic {
     window.removeEventListener('resize', this.resizeCanvas);
     window.removeEventListener('storage', this.onStorage);
     if(this._sparkRaf) cancelAnimationFrame(this._sparkRaf);
+    (this._slotTimers||[]).forEach(t=>clearTimeout(t));
   }
 
   componentDidUpdate(prev){
@@ -1782,17 +1806,41 @@ class Component extends DCLogic {
   }
 
   /* ---------- generic edit + save layer ---------- */
+  /* Eski sürüm inline düzenlemeleri 'dk2_<view>_<sıra>' anahtarıyla saklıyordu.
+     Sıra numarası makalenin paragraf sayısına göre kaydığı için, bir yazıda
+     kaydedilen metin başka bir yazıda ALAKASIZ bir elemana basılıyordu
+     (biyografi kutusu, "Yorumlar", "Bunları da okuyabilirsin" vb.).
+     Çözüm: veriyle beslenen bölgeler tamamen dışarıda + React'in doldurduğu
+     hiçbir eleman ezilmiyor + eski bozuk anahtarlar bir kez temizleniyor. */
+  purgeLegacyEkKeys(){
+    try{
+      if(localStorage.getItem('dk_ekfix_v2')) return;
+      const kill=[];
+      for(let i=0;i<localStorage.length;i++){
+        const k=localStorage.key(i);
+        if(k && k.indexOf('dk2_article_')===0) kill.push(k);
+      }
+      kill.forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
+      localStorage.setItem('dk_ekfix_v2','1');
+    }catch(e){}
+  }
   enableEditing(){
     const root=this.rootRef.current||document.querySelector('.app'); if(!root) return;
     const admin=this.state.adminMode;
     const view=this.state.view;
     const SEL='h1,h2,h3,h4,h5,h6,p,li,blockquote,figcaption,.ic,.asub,.eyebrow';
+    /* veriyle (React ile) doldurulan bölgeler asla inline-düzenleme kapsamına girmez */
+    const SKIP='.nav,.mobilemenu,.menuback,.edtop,.toast,.igwrap,.igmodal,.modal,.progress,.blockmenu,.totop,.adminpanel'
+             +',.card,.catcard,.tm,.trow,.rescard,.catstrip,.seopreview,.hhero,.ahero,.abar'
+             +',.body,.biobox,.comments,.related,.share,.figure,.prevnext,.grid,.trend,.authhero,.edwrap,.results';
     const cands=[...root.querySelectorAll(SEL)].filter(el=>{
       if(el.hasAttribute('data-bind')) return false;
-      if(el.closest('.nav,.mobilemenu,.menuback,.edtop,.toast,.igwrap,.igmodal,.progress,.blockmenu,.totop,.adminpanel,.card,.catcard,.tm,.trow,.rescard,.catstrip,.seopreview,.hhero,.ahero,.abar')) return false;
+      if(el.closest(SKIP)) return false;
       if(el.closest('image-slot')||el.tagName==='CANVAS') return false;
-      if(el.querySelector(SEL)) return false;              // leaf text only
-      return true;                                         // keep empties → stable keys
+      if(el.querySelector('.sc-interp')) return false;      // React'in doldurduğu metin: dokunma
+      if(el.hasAttribute('contenteditable')&&el.hasAttribute('data-dc-tpl')&&el.getAttribute('contenteditable')==='true'&&!el.hasAttribute('data-ek')&&el.closest('[data-editable]')) return false;
+      if(el.querySelector(SEL)) return false;               // leaf text only
+      return true;                                          // keep empties → stable keys
     });
     cands.forEach((el,i)=>{
       const key='dk2_'+view+'_'+i;
@@ -1878,55 +1926,6 @@ class Component extends DCLogic {
       else { const r=new FileReader(); r.onload=()=>this.setState(s=>({ed:{...s.ed,images:[...(s.ed.images||[]),r.result]}})); r.readAsDataURL(f); }
     });
     e.target.value=''; };
-  // --- paragraf arasi gorsel ---
-  IMG_RE = /^\[(?:g(?:ö|o)rsel|img|image)\s*:\s*(\d+)\]$/i;
-  buildBlocks(cur){
-    const imgs = cur.images || [];
-    const used = {};
-    const blocks = [];
-    (cur.body||'').split(/\n+/).map(s=>s.trim()).filter(Boolean).forEach(line=>{
-      const m = line.match(this.IMG_RE);
-      if(m){
-        const n = parseInt(m[1],10) - 1;
-        if(imgs[n]){ used[n]=1; blocks.push({t:'img', url:imgs[n], n:n+1}); return; }
-        return; // gecersiz numara: satiri hic gosterme
-      }
-      blocks.push({t:'p', text:line});
-    });
-    return {blocks, used};
-  }
-  insertImgMarker=(i)=>{
-    const marker = '[görsel:'+(i+1)+']';
-    const ta = this.bodyRef.current;
-    const cur = this.state.ed.body || '';
-    let pos = (ta && typeof ta.selectionStart === 'number') ? ta.selectionStart : cur.length;
-    if(pos > cur.length) pos = cur.length;
-    const before = cur.slice(0,pos).replace(/\s+$/,'');
-    const after  = cur.slice(pos).replace(/^\s+/,'');
-    const next = (before ? before + '\n\n' : '') + marker + (after ? '\n\n' + after : '\n');
-    const caret = (before ? before.length + 2 : 0) + marker.length;
-    this.setState(s=>({ed:{...s.ed, body:next}}), ()=>{
-      const t=this.bodyRef.current;
-      if(t){ try{ t.focus(); t.setSelectionRange(caret,caret); }catch(e){} }
-    });
-    this.toast('Görsel '+(i+1)+' imlecin olduğu yere eklendi', true);
-  };
-  // --- story: cihazdan gorsel (admin) ---
-  onIgUpload=(e)=>{
-    const f = e.target.files && e.target.files[0];
-    e.target.value='';
-    if(!f) return;
-    if(!this.state.adminMode){ this.toast('Bu özellik yalnızca admin modunda', false); return; }
-    const r = new FileReader();
-    r.onload = () => {
-      const id = 'local'+Date.now();
-      this.setState(s=>({ igImages:[...s.igImages, {id, label:'Yüklenen', url:r.result}], igSel:id }),
-                    ()=>setTimeout(()=>this.draw(), 80));
-      this.toast('Görsel yüklendi', true);
-    };
-    r.onerror = () => this.toast('Görsel okunamadı', false);
-    r.readAsDataURL(f);
-  };
   removeEdImage=(i)=>this.setState(s=>{ const arr=[...(s.ed.images||[])]; arr.splice(i,1); return {ed:{...s.ed,images:arr}}; });
   publish=()=>{
     const ed=this.state.ed;
@@ -2198,6 +2197,10 @@ class Component extends DCLogic {
     if(img&&img.src&&img.naturalWidth>0) return img;
     return null;
   }
+  /* image-slot köprüsünün deposu (localStorage + buluttan birleştirilmiş) */
+  slotStore(){ try{ return JSON.parse(localStorage.getItem('dk_imgslots')||'{}'); }catch(e){ return {}; } }
+  slotUrl(id){ const v=this.slotStore()[id]; if(!v) return ''; return (typeof v==='string')?v:(v.u||''); }
+  articleSlotIds(){ const id=this.state.curId||'x'; return ['a-fig-'+id, 'a-fig-'+id+'-2', 'a-fig-'+id+'-3']; }
   getStoryImg(){
     const sel=this.state.igImages.find(i=>i.id===this.state.igSel);
     const url=sel&&sel.url; if(!url) return null;
@@ -2209,14 +2212,32 @@ class Component extends DCLogic {
   }
   openIg=()=>{
     const cur=this.curArt()||{};
-    const list=[];
-    if(cur.cover) list.push({id:'cover', label:'Kapak', url:cur.cover});
-    (cur.images||[]).forEach((u,i)=>list.push({id:'img'+i, label:'Görsel '+(i+1), url:u}));
-    // fallback: any filled in-article image-slots on the page
-    if(list.length===0){ this.imgDefs.forEach(d=>{ const im=this.slotImg(d.id); if(im) list.push({id:d.id,label:d.label,url:im.src}); }); }
+    const list=[]; const seen={};
+    const push=(id,label,url)=>{ if(!url||seen[url]) return; seen[url]=1; list.push({id,label,url}); };
+    if(cur.cover) push('cover','Kapak',cur.cover);
+    (cur.images||[]).forEach((u,i)=>push('img'+i,'Görsel '+(i+1),u));
+    /* sayfaya sürüklenmiş makale içi görsel slotları da seçilebilsin */
+    this.articleSlotIds().forEach((sid,i)=>{ const im=this.slotImg(sid); push(sid,'Slot '+(i+1),(im&&im.src)||this.slotUrl(sid)); });
+    this.imgDefs.forEach(d=>{ const im=this.slotImg(d.id); if(im) push(d.id,d.label,im.src); });
+    /* önceki oturumda cihazdan yüklenenler açık kalsın */
+    (this.state.igImages||[]).forEach(im=>{ if(im&&im.local) push(im.id,im.label,im.url); });
     if(list.length===0) list.push({id:'cover', label:'Kapak', url:null});
     this.setState({igOpen:true, igImages:list, igSel:(list.find(i=>i.url)||list[0]).id});
     setTimeout(()=>this.draw(),120);
+  };
+  onIgUpload=(e)=>{
+    const f=e.target.files&&e.target.files[0]; e.target.value='';
+    if(!f) return;
+    if(!/^image\//.test(f.type||'')){ this.toast('Lütfen bir görsel dosyası seç', false); return; }
+    const r=new FileReader();
+    r.onload=()=>{
+      const id='up'+Date.now();
+      const list=[...(this.state.igImages||[]).filter(i=>i.url), {id, label:'Cihazdan', url:r.result, local:true}];
+      this.setState({igImages:list, igSel:id}, ()=>setTimeout(()=>this.draw(), 80));
+      this.toast('Görsel eklendi — önizlemeye bak', true);
+    };
+    r.onerror=()=>this.toast('Görsel okunamadı', false);
+    r.readAsDataURL(f);
   };
   closeIg=()=>this.setState({igOpen:false});
   setSel(id){ this.setState({igSel:id}); }
@@ -2385,7 +2406,6 @@ class Component extends DCLogic {
     const feat=arts[fi]||arts[0]||{title:'',cat:'',excerpt:'',author:'',initials:'',avc:'#FF6B6B',date:'',read:'',cover:''};
     const cur=arts.find(a=>a.id===this.state.curId)||arts[0]||{id:'',title:'',cat:'',excerpt:'',author:'',authorId:'',initials:'',avc:'#FF6B6B',date:'',read:'',body:'',cover:'',likes:0,comments:[]};
     const curBody=(cur.body||'').split(/\n+/).map(s=>s.trim()).filter(Boolean);
-    const curBlocks=this.buildBlocks(cur);
     const authorRec=this.curAuthorRec()||{id:'',name:'',role:'',bio:'',avc:'#FF6B6B',ig:'',tw:'',in:''};
     const authorArts=arts.filter(a=>a.authorId===authorRec.id);
     const liked=this.isLiked(cur.id);
@@ -2407,7 +2427,7 @@ class Component extends DCLogic {
       homeCls:v==='home'?'on':'', catCls:v==='categories'?'on':'', aboutCls:v==='about'?'on':'', contactCls:v==='contact'?'on':'',
       goCategories:this.goCategories, goAbout:this.goAbout, goContact:this.goContact, goSearch:this.goSearch, goEditor:this.goEditor,
       sendContact:this.sendContact, saveDraft:this.saveDraft, publish:this.publish,
-      blockMenu:this.state.blockMenu, showEdImage:this.state.showEdImage, plusRef:this.plusRef, bodyRef:this.bodyRef,
+      blockMenu:this.state.blockMenu, showEdImage:this.state.showEdImage, plusRef:this.plusRef,
       toggleBlockMenu:this.toggleBlockMenu, closeBlockMenu:this.closeBlockMenu, addImage:this.addImage, toggleDark:this.toggleDark, toggleAdmin:this.toggleAdmin,
       goLogin:this.goLogin, handleLogin:this.handleLogin, handleLogout:this.handleLogout, loginUser:this.state.loginUser, loginPass:this.state.loginPass,
       menuOpen:this.state.menuOpen, toggleMenu:this.toggleMenu, closeMenu:this.closeMenu,
@@ -2452,19 +2472,16 @@ class Component extends DCLogic {
       authAvId:'author-av-'+(authorRec.id||'x'),
       authorArticles:authorArts.map(mkCard), authHasArts:authorArts.length>0, authNoArts:authorArts.length===0,
 
-      artBody:(()=>{ let first=true; return curBlocks.blocks.map((b,i)=>{
-        if(b.t==='img') return {node:React.createElement('figure',{className:'figure inline',key:'f'+i},
-          React.createElement('img',{src:b.url,alt:'',loading:'lazy',style:{width:'100%',height:'auto',display:'block',borderRadius:'12px'}}))};
-        const cls=first?'dropcap':''; first=false;
-        return {node:React.createElement('p',{className:cls,key:'p'+i}, b.text)};
-      }); })(), artHasBody:curBlocks.blocks.length>0, artNoBody:curBlocks.blocks.length===0,
-      artImages:(cur.images||[]).map((u,i)=>({u,i})).filter(x=>!curBlocks.used[x.i]).map(x=>({img:React.createElement('img',{src:x.u,alt:'',loading:'lazy',style:{width:'100%',height:'auto',display:'block',borderRadius:'12px'}})})), artHasImages:(cur.images||[]).some((u,i)=>!curBlocks.used[i]),
+      artBody:curBody.map((p,i)=>({text:p, cls:i===0?'dropcap':''})), artHasBody:curBody.length>0, artNoBody:curBody.length===0,
+      artImages:(cur.images||[]).map(u=>({img:React.createElement('img',{src:u,alt:'',loading:'lazy',style:{width:'100%',height:'auto',display:'block',borderRadius:'12px'}})})), artHasImages:(cur.images||[]).length>0,
+      /* admin: her zaman boş slotlar görünür; okuyucu: yalnızca DOLU slotlar görünür */
+      artSlots:(()=>{ const out=[]; this.articleSlotIds().forEach((sid,i)=>{ if(this.state.adminMode||this.slotUrl(sid)) out.push({id:sid, ph:'admin: görsel slotu '+(i+1)}); }); return out; })(),
       edTitle:ed.title, edCat:ed.cat, edExcerpt:ed.excerpt, edBody:ed.body, edTags:ed.tags, edSlug:ed.slug,
       edAuthorId:ed.authorId, edNewAuthor:ed.newAuthor, showNewAuthor:ed.authorId==='new'||(site.authors.length===0),
       authorOpts:authorOpts, hasCover:!!ed.cover, noCover:!ed.cover,
       edCoverImg: ed.cover ? React.createElement('img',{src:ed.cover,alt:'kapak',style:{width:'100%',height:'100%',objectFit:'cover',display:'block'}}) : null,
       onEdCover:this.onEdCover, clearEdCover:this.clearEdCover, onEdImages:this.onEdImages,
-      edImages:(ed.images||[]).map((u,i)=>({url:u, tag:'[görsel:'+(i+1)+']', thumb:React.createElement('img',{src:u,alt:'',style:{width:'100%',height:'100%',objectFit:'cover',display:'block'}}), remove:()=>this.removeEdImage(i), insert:()=>this.insertImgMarker(i)})),
+      edImages:(ed.images||[]).map((u,i)=>({url:u, thumb:React.createElement('img',{src:u,alt:'',style:{width:'100%',height:'100%',objectFit:'cover',display:'block'}}), remove:()=>this.removeEdImage(i)})),
       edHasImages:(ed.images||[]).length>0,
       onEdAuthorId:(e)=>this.setEd('authorId',e), onEdNewAuthor:(e)=>this.setEd('newAuthor',e),
       edSlugText:ed.slug||'yeni-yazi', edSeoTitle:(ed.title||'Başlıksız yazı')+' — '+site.logo, edSeoDesc:ed.excerpt||'Açıklama ekle…',
@@ -2535,10 +2552,11 @@ class Component extends DCLogic {
       postComment:this.postComment, subscribe:this.subscribe,
       shareTwitter:this.shareTwitter, shareFacebook:this.shareFacebook, shareLinkedIn:this.shareLinkedIn,
       shareWhatsApp:this.shareWhatsApp, shareTelegram:this.shareTelegram, copyLink:this.copyLink, nativeShare:this.nativeShare,
-      openIg:this.openIg, closeIg:this.closeIg, igOpen:this.state.igOpen, onIgUpload:this.onIgUpload,
+      openIg:this.openIg, closeIg:this.closeIg, igOpen:this.state.igOpen,
       igDownload:this.igDownload, igOpenApp:this.igOpenApp,
       cards, related:cards.slice(0,3), authorArticles:cards, trending,
       igImages:this.state.igImages.map(im=>({...im, cls:'pick'+(this.state.igSel===im.id?' sel':''), select:()=>this.setSel(im.id), thumb: im.url?React.createElement('img',{src:im.url,alt:'',style:{width:'100%',height:'100%',objectFit:'cover'}}):null})),
+      igNoImages:!(this.state.igImages||[]).some(i=>i.url), onIgUpload:this.onIgUpload,
       setPosTop:()=>this.setPos('top'), setPosCenter:()=>this.setPos('center'), setPosBottom:()=>this.setPos('bottom'),
       posTopCls:seg(this.state.igPos,'top'), posCenterCls:seg(this.state.igPos,'center'), posBottomCls:seg(this.state.igPos,'bottom'),
       setModeText:()=>this.setMode('text'), setModeQr:()=>this.setMode('qr'), setModeBoth:()=>this.setMode('both'),
