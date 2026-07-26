@@ -650,7 +650,11 @@
   .edplus:hover{color:var(--coral);border-color:var(--coral);transform:rotate(90deg)}
   .edblockmenu{position:absolute;left:-52px;top:44px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 34px rgba(0,0,0,.16);padding:8px;width:230px;z-index:5}
   .edblockmenu button{display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;padding:10px 12px;border-radius:9px;font:500 14px var(--sans);color:var(--text);cursor:pointer;text-align:left}
-  .edblockmenu button:hover{background:var(--bg)}
+  .edblockmenu button:hover,.edblockmenu .blkupload:hover{background:var(--bg)}
+  .edblockmenu .blkupload{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border-radius:9px;font:500 14px var(--sans);color:var(--text);cursor:pointer;text-align:left}
+  .edimg .ins{position:absolute;top:5px;right:33px;width:24px;height:24px;border:none;border-radius:6px;background:rgba(20,18,32,.8);color:#fff;font-size:12px;cursor:pointer}
+  .edimg .ins:hover{background:var(--coral)}
+  .edimg .tag{position:absolute;left:5px;bottom:5px;background:rgba(20,18,32,.82);color:#fff;font:600 10px var(--sans);padding:3px 7px;border-radius:6px;letter-spacing:.3px}
   .edblockmenu button .bi2{width:30px;height:30px;border-radius:8px;background:var(--bg);display:grid;place-items:center;font-size:15px}
   .edslot{position:relative;height:300px;border-radius:14px;overflow:hidden;margin:10px 0;border:1px solid var(--line)}
   .edside{border-left:1px solid var(--line);padding:28px 26px;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;background:var(--surface)}
@@ -786,7 +790,9 @@
     .edmain{padding:26px 20px 24px;max-width:100%}
     .edtitle{font-size:30px}
     .edside{border-left:none;border-top:1px solid var(--line);position:static;height:auto;top:auto;padding:22px 20px 80px}
-    .edplus{position:static;margin:0 0 8px;transform:none}
+    .edplus{position:static;margin:0 0 10px;transform:none;width:auto;height:38px;padding:0 16px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;font:600 13.5px var(--sans)}
+    .edplus::after{content:'Araya görsel / blok ekle'}
+    .edplus:hover{transform:none}
     .edplus:hover{transform:rotate(90deg)}
     .edblockmenu{left:0;top:46px;width:min(270px,84vw)}
     .edtop{padding:10px 14px;gap:8px;overflow-x:auto;scrollbar-width:none}
@@ -1035,7 +1041,7 @@
         <sc-if value="{{ artHasBody }}" hint-placeholder-val="{{ true }}">
           <div>
             <sc-for list="{{ artBody }}" as="p" hint-placeholder-count="4">
-              <p class="{{ p.cls }}">{{ p.text }}</p>
+              {{ p.node }}
             </sc-for>
             <sc-for list="{{ artImages }}" as="im" hint-placeholder-count="0">
               <figure class="figure">{{ im.img }}</figure>
@@ -1303,6 +1309,7 @@
       <button class="back" sc-camel-on-click="{{ goHome }}">← Çık</button>
       <span class="saved">{{ edStatus }}</span>
       <div class="sp"></div>
+      <button class="prev" sc-camel-on-click="{{ openArticle }}">👁 Önizleme</button>
       <button class="prev" sc-camel-on-click="{{ saveDraft }}">Taslak Kaydet</button>
       <button class="writebtn" sc-camel-on-click="{{ publish }}">{{ edPublishLabel }}</button>
     </div>
@@ -1322,7 +1329,7 @@
           <button class="edplus" ref="{{ plusRef }}" sc-camel-on-click="{{ toggleBlockMenu }}">+</button>
           <sc-if value="{{ blockMenu }}" hint-placeholder-val="{{ false }}">
             <div class="edblockmenu">
-              <button sc-camel-on-click="{{ addImage }}"><span class="bi2">📷</span>Görsel Ekle</button>
+              <label class="blkupload"><span class="bi2">📷</span>Görsel Ekle (araya)<input type="file" accept="image/*" sc-camel-on-change="{{ onInlineImage }}" style="display:none"></label>
               <button sc-camel-on-click="{{ closeBlockMenu }}"><span class="bi2">📹</span>Video Embed</button>
               <button sc-camel-on-click="{{ closeBlockMenu }}"><span class="bi2">📊</span>Embed (URL yapıştır)</button>
               <button sc-camel-on-click="{{ closeBlockMenu }}"><span class="bi2">──</span>Ayırıcı</button>
@@ -1332,9 +1339,6 @@
           </sc-if>
           <textarea class="edcontent" rows="14" placeholder="Hikâyeni anlatmaya başla... (paragrafları boş satırla ayır)" value="{{ edBody }}" sc-camel-on-input="{{ onEdBody }}"></textarea>
         </div>
-        <sc-if value="{{ showEdImage }}" hint-placeholder-val="{{ false }}">
-          <div class="edslot"><image-slot id="ed-inline" shape="rect" placeholder="görseli sürükle veya tıkla"></image-slot></div>
-        </sc-if>
       </div>
       <div class="edside">
         <div class="fld"><h5>Öne çıkan görsel (kapak)</h5>
@@ -1345,7 +1349,7 @@
           <sc-if value="{{ edHasImages }}" hint-placeholder-val="{{ false }}">
             <div class="edimggrid">
               <sc-for list="{{ edImages }}" as="im" hint-placeholder-count="2">
-                <div class="edimg">{{ im.thumb }}<button sc-camel-on-click="{{ im.remove }}">✕</button></div>
+                <div class="edimg">{{ im.thumb }}<button class="ins" title="Metnin arasına ekle" sc-camel-on-click="{{ im.insert }}">↵</button><button sc-camel-on-click="{{ im.remove }}">✕</button><span class="tag">{{ im.tag }}</span></div>
               </sc-for>
             </div>
           </sc-if>
@@ -1944,7 +1948,15 @@ class Component extends DCLogic {
       else { const r=new FileReader(); r.onload=()=>this.setState(s=>({ed:{...s.ed,images:[...(s.ed.images||[]),r.result]}})); r.readAsDataURL(f); }
     });
     e.target.value=''; };
-  removeEdImage=(i)=>this.setState(s=>{ const arr=[...(s.ed.images||[])]; arr.splice(i,1); return {ed:{...s.ed,images:arr}}; });
+  removeEdImage=(i)=>this.setState(s=>{
+    const arr=[...(s.ed.images||[])]; arr.splice(i,1);
+    /* gövdedeki [[img:N]] işaretlerini sil / yeniden numarala */
+    let body=(s.ed.body||'').replace(new RegExp('\\n*\\[\\[img:'+(i+1)+'(\\|[^\\]]*)?\\]\\]\\n*','g'),'\n\n');
+    body=body.replace(/\[\[img:(\d+)(\|[^\]]*)?\]\]/g,(m,n,cap)=>{
+      const k=parseInt(n,10); return '[[img:'+(k>i+1?k-1:k)+(cap||'')+']]';
+    }).replace(/\n{3,}/g,'\n\n');
+    return {ed:{...s.ed,images:arr,body:body}};
+  });
   publish=()=>{
     const ed=this.state.ed;
     const title=(ed.title||'').trim();
@@ -1964,7 +1976,7 @@ class Component extends DCLogic {
     const editId=this.state.edId;
     const prev=editId?(this.state.site.articles||[]).find(x=>x.id===editId):null;
     const a={ id:(prev?prev.id:'a'+Date.now()), cat:(ed.cat||'Genel').trim(), title,
-      excerpt:(ed.excerpt||'').trim()||(ed.body||'').replace(/\n+/g,' ').slice(0,120),
+      excerpt:(ed.excerpt||'').trim()||(ed.body||'').replace(/\[\[img:[^\]]*\]\]/g,'').replace(/\n+/g,' ').trim().slice(0,120),
       authorId:authorId, author:author.name, initials:this.initials(author.name), avc:author.avc,
       date:(prev?prev.date:this.today()), read, body:ed.body||'', slug:ed.slug||this.slugify(title),
       tags:(ed.tags||'').split(',').map(t=>t.trim()).filter(Boolean),
@@ -2020,7 +2032,43 @@ class Component extends DCLogic {
     const arts=this.state.site.articles.map(a=>a.id===id?{...a, comments:[...(a.comments||[]), c]}:a); this.setSite({articles:arts}, ()=>{ if(ta) ta.value=''; if(this.commentNameRef.current) this.commentNameRef.current.value=''; }); this.toast('Yorumun eklendi!', true); };
   toggleBlockMenu=()=>this.setState({blockMenu:!this.state.blockMenu});
   closeBlockMenu=()=>this.setState({blockMenu:false});
-  addImage=()=>this.setState({blockMenu:false, showEdImage:true});
+  addImage=()=>this.setState({blockMenu:false});
+  /* imleç konumuna [[img:N]] işareti bırakır — yayınlarken de düzenlerken de çalışır */
+  insertImgMarker=(idx)=>{
+    const ta=document.querySelector('.edcontent');
+    const body=this.state.ed.body||'';
+    const mark='[[img:'+(idx+1)+']]';
+    let at=body.length;
+    if(ta && typeof ta.selectionStart==='number' && document.activeElement===ta) at=ta.selectionStart;
+    else if(ta && typeof ta.selectionStart==='number' && ta.selectionStart>0) at=ta.selectionStart;
+    const before=body.slice(0,at).replace(/\s+$/,'');
+    const after=body.slice(at).replace(/^\s+/,'');
+    const next=(before?before+'\n\n':'')+mark+(after?'\n\n'+after:'\n');
+    const caret=(before?before.length+2:0)+mark.length;
+    this.setState(s=>({ed:{...s.ed,body:next}, blockMenu:false}), ()=>{
+      const t=document.querySelector('.edcontent');
+      if(t){ try{ t.focus(); t.setSelectionRange(caret,caret); }catch(e){} this.autoGrow(t); }
+    });
+    this.toast('Görsel metnin arasına eklendi ('+mark+')', true);
+  };
+  autoGrow(t){ if(!t) return; try{ t.style.height='auto'; t.style.height=t.scrollHeight+'px'; }catch(e){} }
+  onInlineImage=(e)=>{
+    const f=e.target.files&&e.target.files[0]; e.target.value='';
+    if(!f) return;
+    const place=(url)=>{
+      const arr=[...(this.state.ed.images||[]), url];
+      this.setState(s=>({ed:{...s.ed,images:arr}}), ()=>this.insertImgMarker(arr.length-1));
+    };
+    if(window.DK&&window.DK.ready){
+      this.toast('Görsel yükleniyor…', true);
+      window.DK.uploadImage(f).then(url=>{
+        if(url) place(url);
+        else { const r=new FileReader(); r.onload=()=>place(r.result); r.readAsDataURL(f); }
+      }).catch(()=>{ const r=new FileReader(); r.onload=()=>place(r.result); r.readAsDataURL(f); });
+      return;
+    }
+    const r=new FileReader(); r.onload=()=>place(r.result); r.readAsDataURL(f);
+  };
   goLogin=()=>{ this.nav('login'); };
   toggleMenu=()=>this.setState(s=>({menuOpen:!s.menuOpen}));
   closeMenu=()=>this.setState({menuOpen:false});
@@ -2502,8 +2550,26 @@ class Component extends DCLogic {
       authAvId:'author-av-'+(authorRec.id||'x'),
       authorArticles:authorArts.map(mkCard), authHasArts:authorArts.length>0, authNoArts:authorArts.length===0,
 
-      artBody:curBody.map((p,i)=>({text:p, cls:i===0?'dropcap':''})), artHasBody:curBody.length>0, artNoBody:curBody.length===0,
-      artImages:(cur.images||[]).map(u=>({img:React.createElement('img',{src:u,alt:'',loading:'lazy',style:{width:'100%',height:'auto',display:'block',borderRadius:'12px'}})})), artHasImages:(cur.images||[]).length>0,
+      artBody:(()=>{
+        const imgs=cur.images||[]; const used={}; let firstText=true; const out=[];
+        curBody.forEach((raw,i)=>{
+          const m=/^\[\[img:(\d+)(?:\|([^\]]*))?\]\]$/.exec(raw.trim());
+          if(m){
+            const k=parseInt(m[1],10)-1, u=imgs[k];
+            if(u){ used[k]=1;
+              out.push({node:React.createElement('figure',{key:'f'+i,className:'figure'},
+                React.createElement('img',{src:u,alt:m[2]||'',loading:'lazy',style:{width:'100%',height:'auto',display:'block',borderRadius:'12px'}}),
+                m[2]?React.createElement('figcaption',null,m[2]):null)});
+            }
+            return;
+          }
+          out.push({node:React.createElement('p',{key:'p'+i,className:firstText?'dropcap':''},raw)});
+          firstText=false;
+        });
+        this._inlineUsed=used;
+        return out;
+      })(), artHasBody:curBody.length>0, artNoBody:curBody.length===0,
+      artImages:(cur.images||[]).map((u,i)=>({u,i})).filter(x=>!(this._inlineUsed||{})[x.i]).map(x=>({img:React.createElement('img',{src:x.u,alt:'',loading:'lazy',style:{width:'100%',height:'auto',display:'block',borderRadius:'12px'}})})), artHasImages:(cur.images||[]).length>0,
       /* admin: her zaman boş slotlar görünür; okuyucu: yalnızca DOLU slotlar görünür */
       artSlots:(()=>{ const out=[]; this.articleSlotIds().forEach((sid,i)=>{ if(this.state.adminMode||this.slotUrl(sid)) out.push({id:sid, ph:'admin: görsel slotu '+(i+1)}); }); return out; })(),
       edTitle:ed.title, edCat:ed.cat, edExcerpt:ed.excerpt, edBody:ed.body, edTags:ed.tags, edSlug:ed.slug,
@@ -2511,7 +2577,8 @@ class Component extends DCLogic {
       authorOpts:authorOpts, hasCover:!!ed.cover, noCover:!ed.cover,
       edCoverImg: ed.cover ? React.createElement('img',{src:ed.cover,alt:'kapak',style:{width:'100%',height:'100%',objectFit:'cover',display:'block'}}) : null,
       onEdCover:this.onEdCover, clearEdCover:this.clearEdCover, onEdImages:this.onEdImages,
-      edImages:(ed.images||[]).map((u,i)=>({url:u, thumb:React.createElement('img',{src:u,alt:'',style:{width:'100%',height:'100%',objectFit:'cover',display:'block'}}), remove:()=>this.removeEdImage(i)})),
+      edImages:(ed.images||[]).map((u,i)=>({url:u, thumb:React.createElement('img',{src:u,alt:'',style:{width:'100%',height:'100%',objectFit:'cover',display:'block'}}), remove:()=>this.removeEdImage(i), insert:()=>this.insertImgMarker(i), tag:(new RegExp('\\[\\[img:'+(i+1)+'(\\||\\])').test(ed.body||''))?('araya #'+(i+1)):'sonda'})),
+      onInlineImage:this.onInlineImage,
       edHasImages:(ed.images||[]).length>0,
       onEdAuthorId:(e)=>this.setEd('authorId',e), onEdNewAuthor:(e)=>this.setEd('newAuthor',e),
       edSlugText:ed.slug||'yeni-yazi', edSeoTitle:(ed.title||'Başlıksız yazı')+' — '+site.logo, edSeoDesc:ed.excerpt||'Açıklama ekle…',
