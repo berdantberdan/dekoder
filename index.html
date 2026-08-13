@@ -1648,11 +1648,13 @@ class Component extends DCLogic {
         {id:'k6',name:'Kültür',count:'31 yazı',desc:'Sanat, medya ve toplum üzerine.'}
       ],
       team:[],
-      authors:[]
+      authors:[],
+      inlineEdits:{},
+      binds:{}
     };
   }
   loadSite(){
-    try{ const s=localStorage.getItem('dk_site'); if(s){ const p=JSON.parse(s); const d=this.DEFAULT_SITE(); return {...d, ...p, colors:{...d.colors,...(p.colors||{})}, social:{...d.social,...(p.social||{})}, authors:Array.isArray(p.authors)?p.authors:[]}; } }catch(e){}
+    try{ const s=localStorage.getItem('dk_site'); if(s){ const p=JSON.parse(s); const d=this.DEFAULT_SITE(); return {...d, ...p, colors:{...d.colors,...(p.colors||{})}, social:{...d.social,...(p.social||{})}, authors:Array.isArray(p.authors)?p.authors:[], inlineEdits:{...d.inlineEdits,...(p.inlineEdits||{})}, binds:{...d.binds,...(p.binds||{})}}; } }catch(e){}
     return this.DEFAULT_SITE();
   }
   persistSite(site){ try{ site.updatedAt=Date.now(); localStorage.setItem('dk_site', JSON.stringify(site)); }catch(e){} this.cloudSaveSite(site); }
@@ -1716,9 +1718,9 @@ class Component extends DCLogic {
         const order=[]; const seen={};
         const dele={}; ((data.deleted||[]).concat(localSite.deleted||[])).forEach(x=>dele[x]=1);
         (base.articles||[]).concat(localSite.articles||[], data.articles||[]).forEach(a=>{ if(a&&a.id&&!seen[a.id]&&!dele[a.id]){ seen[a.id]=1; order.push(byId[a.id]); } });
-        const merged={...d, ...base, colors:{...d.colors,...(base.colors||{})}, social:{...d.social,...(base.social||{})}, authors:Array.isArray(base.authors)&&base.authors.length?base.authors:(Array.isArray(data.authors)?data.authors:[]), articles:order, deleted:Object.keys(dele)};
+        const merged={...d, ...base, colors:{...d.colors,...(base.colors||{})}, social:{...d.social,...(base.social||{})}, inlineEdits:{...(d.inlineEdits||{}), ...(data.inlineEdits||{}), ...(localSite.inlineEdits||{}), ...(base.inlineEdits||{})}, binds:{...(d.binds||{}), ...(data.binds||{}), ...(localSite.binds||{}), ...(base.binds||{})}, authors:Array.isArray(base.authors)&&base.authors.length?base.authors:(Array.isArray(data.authors)?data.authors:[]), articles:order, deleted:Object.keys(dele)};
         try{ localStorage.setItem('dk_site', JSON.stringify(merged)); }catch(e){}
-        this.setState({site:merged}, ()=>{ if(this.state.view==='article'&&this.state.curId) this.loadCloudArticle(this.state.curId); });
+        this.setState({site:merged}, ()=>{ this.applyBinds(); if(this.state.view==='article'&&this.state.curId) this.loadCloudArticle(this.state.curId); });
         // birleşim buluttakinden zenginse ve giriş varsa buluta geri yaz
         if(order.length>cloudArts){ window.DK.getUser().then(u=>{ if(u){ const s={...merged, updatedAt:Date.now()}; window.DK.saveSite(s).then(r=>{ if(r&&r.ok!==false) this.toast('☁ Eksik yazılar buluta tamamlandı', true); }); } }); }
       }
@@ -1804,6 +1806,8 @@ class Component extends DCLogic {
     const root=this.rootRef.current;
     if(root){
       root.setAttribute('data-theme', this.state.darkMode?'dark':'light');
+      document.documentElement.setAttribute('data-theme', this.state.darkMode?'dark':'light');
+      document.body && document.body.setAttribute('data-theme', this.state.darkMode?'dark':'light');
       root.classList.toggle('admin', this.state.adminMode);
       root.querySelectorAll('[data-editable]').forEach(n=>{ n.contentEditable = this.state.adminMode ? 'true':'false'; });
       const co=this.state.site&&this.state.site.colors; if(co){ root.style.setProperty('--coral',co.coral); root.style.setProperty('--gold',co.gold); }
@@ -1852,10 +1856,12 @@ class Component extends DCLogic {
       if(el.querySelector(SEL)) return false;               // leaf text only
       return true;                                          // keep empties → stable keys
     });
+    const ie=(this.state.site&&this.state.site.inlineEdits)||{};
     cands.forEach((el,i)=>{
       const key='dk2_'+view+'_'+i;
       el.setAttribute('data-ek', key);
-      let sv=null; try{ sv=localStorage.getItem(key); }catch(e){}
+      let sv=Object.prototype.hasOwnProperty.call(ie,key)?ie[key]:null;
+      if(sv==null){ try{ sv=localStorage.getItem(key); }catch(e){} }
       if(sv!=null && el.innerHTML!==sv) el.innerHTML=sv;
       el.contentEditable = admin ? 'true':'false';
     });
@@ -1866,6 +1872,9 @@ class Component extends DCLogic {
     if(/^(<br\s*\/?>|\s|&nbsp;)*$/i.test(el.innerHTML)) el.innerHTML='';   // normalize emptied box (keep it, don't restore stale)
     const key=el.getAttribute('data-ek');
     try{ localStorage.setItem(key, el.innerHTML); }catch(e){}
+    const site={...this.state.site, inlineEdits:{...(this.state.site.inlineEdits||{}), [key]: el.innerHTML}};
+    this.persistSite(site);
+    this.setState({site});
     clearTimeout(this._saveTt);
     this._saveTt=setTimeout(()=>this.toast('Değişiklik kaydedildi', true), 700);
   };
@@ -1873,8 +1882,10 @@ class Component extends DCLogic {
   /* ---------- persistence / editable binds ---------- */
   applyBinds(){
     const keys=['title','author','bio'];
+    const b=(this.state.site&&this.state.site.binds)||{};
     keys.forEach(k=>{
-      let v=null; try{ v=localStorage.getItem('dk_'+k); }catch(e){}
+      let v=Object.prototype.hasOwnProperty.call(b,k)?b[k]:null;
+      if(v==null){ try{ v=localStorage.getItem('dk_'+k); }catch(e){} }
       if(v!=null) this.setBind(k, v, null);
     });
   }
@@ -1886,6 +1897,9 @@ class Component extends DCLogic {
     if(!key) return;
     const val=n.textContent;
     try{ localStorage.setItem('dk_'+key, val); }catch(e){}
+    const site={...this.state.site, binds:{...(this.state.site.binds||{}), [key]: val}};
+    this.persistSite(site);
+    this.setState({site});
     this.setBind(key, val, n);
   };
 
@@ -2654,7 +2668,7 @@ class Component extends DCLogic {
       shareWhatsApp:this.shareWhatsApp, shareTelegram:this.shareTelegram, copyLink:this.copyLink, nativeShare:this.nativeShare,
       openIg:this.openIg, closeIg:this.closeIg, igOpen:this.state.igOpen,
       igDownload:this.igDownload, igOpenApp:this.igOpenApp,
-      cards, related:cards.slice(0,3), authorArticles:cards, trending,
+      cards, related:cards.slice(0,3), trending,
       igImages:this.state.igImages.map(im=>({...im, cls:'pick'+(this.state.igSel===im.id?' sel':''), select:()=>this.setSel(im.id), thumb: im.url?React.createElement('img',{src:im.url,alt:'',style:{width:'100%',height:'100%',objectFit:'cover'}}):null})),
       igNoImages:!(this.state.igImages||[]).some(i=>i.url), onIgUpload:this.onIgUpload,
       setPosTop:()=>this.setPos('top'), setPosCenter:()=>this.setPos('center'), setPosBottom:()=>this.setPos('bottom'),
