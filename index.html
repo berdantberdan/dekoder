@@ -852,6 +852,116 @@
     .adminpanel{width:100%;max-width:100%}
   }
 </style>
+
+<style id="miti-editorial-theme">
+/* Miti Navi reference: visual layer only. Existing markup and behavior are preserved. */
+:root, [data-theme="light"] {
+  --bg:#e6dece; --surface:#e6dece; --nav:#e6dece;
+  --text:#000e13; --muted:#625f58; --line:#aaa497;
+  --navy:#000e13; --shadow:none;
+  --serif:'Lora',Georgia,'Times New Roman',serif;
+  --sans:'IBM Plex Mono','Cascadia Mono',Consolas,'Courier New',monospace;
+  --editorial-accent:#ffdead;
+}
+[data-theme="dark"] {
+  --bg:#000e13; --surface:#000e13; --nav:#000e13;
+  --text:#e6dece; --muted:#b5b0a5; --line:#5b625e; --navy:#000e13; --shadow:none;
+}
+/* Keep admin palette controls working; their existing accent variables are untouched. */
+body { letter-spacing:.35px; }
+.app a { color:var(--text); text-decoration:underline; text-decoration-color:var(--editorial-accent); text-underline-offset:5px; }
+.app a:hover { text-decoration-color:currentColor; }
+.app :is(button,input,textarea,select) { font-family:var(--sans); border-radius:0; box-shadow:none; }
+.app :is(button,a,input,textarea,select,[contenteditable]):focus-visible { outline:2px solid var(--text); outline-offset:4px; }
+.app :is(input,textarea,select) { accent-color:var(--text); }
+.app :is(input,textarea)::placeholder { color:var(--muted); opacity:1; }
+.app :is(.card,.biobox,.trendcard,.cinfo,.cform,.adminpanel,.mobilemenu,.scard,.sheet,.previewbox,.aboutstats .st,.pitem,.palcard,.seopreview,.logotool,.logoprev,.edblockmenu,.edtoolbar,.toast,.ccard,.news,.catcard,.edslot,.edimg,.pick,.toggle,.tags .tag,.adminbadge,.catpill,.tt,.th,.figure .sw,.fld .feat,.cmap,.socials span,.asocials span) { border-radius:0; box-shadow:none; }
+.app .nav,.app .edtop { background:var(--nav); backdrop-filter:none; border-bottom:1px solid var(--text); }
+.app .brand b { font-weight:400; letter-spacing:-1px; }
+.app .brand b .dot { color:var(--text); }
+.app .brand span { font-size:9px; letter-spacing:1px; }
+.app .navlinks { font-size:12px; letter-spacing:.7px; gap:22px; }
+.app .navlinks button { padding:5px 0; border-bottom:1px solid transparent; }
+.app .navlinks button.on,.app .navlinks button:hover { color:var(--text); border-bottom-color:var(--editorial-accent); }
+.app :is(.writebtn,.btn,.follow,.artedit,.followsm,.cbtn,.send,.ig-hero,.sbtn) {
+  background:transparent !important; color:var(--text) !important;
+  border:0; border-bottom:1px solid var(--editorial-accent); box-shadow:none;
+  font-weight:400; letter-spacing:.7px;
+}
+.app :is(.writebtn,.btn,.follow,.artedit,.followsm,.cbtn,.send,.ig-hero,.sbtn):hover { border-bottom-color:currentColor; box-shadow:none; }
+.app .icobtn { border-color:var(--line); color:var(--text); }
+.app .icobtn:hover,.app .icobtn.act { border-color:var(--text); background:transparent; color:var(--text); }
+.app .mmlinks button.on { border-left-color:var(--text); background:transparent; color:var(--text); text-decoration:underline; text-decoration-color:var(--editorial-accent); text-underline-offset:6px; }
+.app :is(.chip,.ptab,.seg button,.searchmeta .filters button,.lt-asp .aspbtn) { background:transparent; color:var(--muted); border-color:var(--line); font-weight:400; }
+.app :is(.chip.on,.ptab.on,.seg button.on,.searchmeta .filters button.on,.lt-asp .aspbtn.on) { background:transparent; color:var(--text); border-color:var(--text); border-bottom-color:var(--editorial-accent); text-decoration:underline; text-decoration-color:var(--editorial-accent); text-underline-offset:4px; }
+.app .chip:hover { color:var(--text); border-color:var(--text); }
+.app .progress { height:2px; background:var(--editorial-accent); box-shadow:none; }
+.app :is(.hhero,.ahero) { background:var(--bg); }
+.app :is(.hhero,.ahero) > :is(.sw,.scrim) { border-radius:50% 50% 0 0 / 16% 16% 0 0; overflow:hidden; }
+.app :is(.hhero,.ahero) .scrim { background:linear-gradient(to top,rgba(0,14,19,.96),rgba(0,14,19,.46) 62%,rgba(0,14,19,.12)); }
+.app :is(.hhero,.ahero) h1 { font-weight:400; color:#e6dece; letter-spacing:-1.1px; }
+.app :is(.hhero,.ahero) p,.app .ahero .sub,.app .hmeta .t,.app .hmeta .t span { color:#e6dece; }
+.app .hhero .btn { color:#e6dece !important; }
+.app .catpill { background:var(--surface); color:var(--text); font-weight:400; letter-spacing:1px; border-bottom:1px solid var(--editorial-accent); }
+.app .hhero .catpill,.app .ahero .catpill { background:transparent; color:#e6dece; }
+.app :is(.card,.biobox,.scard,.cinfo,.aboutstats .st) { border:0; border-bottom:1px solid var(--line); background:var(--surface); }
+.app .card:hover { transform:none; box-shadow:none; border-bottom-color:var(--text); }
+.app .card:hover h3 { text-decoration:underline; text-decoration-thickness:1px; text-decoration-color:var(--editorial-accent); text-underline-offset:5px; }
+.app .card h3 { font-weight:400; }
+.app .card .exc { color:var(--muted); font-size:13px; line-height:1.65; }
+.app .card .bm { background:var(--surface); color:var(--text); }
+.app .shead h2 { font-weight:400; letter-spacing:-.7px; }
+.app .shead .rule { background:var(--line); }
+.app .trow .rank { color:var(--muted); font-weight:400; }
+.app .trow:hover .rank { color:var(--text); }
+.app :is(.pghead h1,.abouthero .txt h1,.authhero h1,.news h2,.body h2,.comments h3) { font-weight:400; letter-spacing:-1px; }
+.app .pghead .eyebrow { color:var(--muted); font-family:Georgia,serif; font-weight:400; letter-spacing:4px; }
+.app .news,.app .authhero,.app .emptyhero,.app .ccard { background:var(--surface); color:var(--text); border-top:1px solid var(--text); border-bottom:1px solid var(--line); }
+.app .news::before { display:none; }
+.app .news :is(p,.small),.app .authhero :is(p,.role),.app .astats .s span,.app .emptyhero :is(h1,p) { color:var(--text); }
+.app .news input { background:transparent; color:var(--text); border:1px solid var(--line); }
+.app .news input::placeholder { color:var(--muted); }
+.app .ccard .cnum { font-family:var(--serif); font-weight:400; }
+.app .aboutstats .st b { color:var(--text); font-weight:400; }
+.app .abouthero .ph { border-radius:50% 50% 0 0 / 35% 35% 0 0; }
+.app .body p { font-size:16px; line-height:1.85; }
+.app .body ul li { font-size:16px; }
+.app .body .dropcap:first-letter { float:none; font:inherit; padding:0; color:inherit; }
+.app .body blockquote { border-left:1px solid var(--text); }
+.app .body ul li::before,.app .divider span { background:var(--text); }
+.app .inlinecode { background:transparent; color:var(--text); border-bottom:1px solid var(--line); border-radius:0; }
+.app .catcard:hover .ov { background:linear-gradient(to top,rgba(0,14,19,.94),rgba(0,14,19,.4)); }
+.app .catcard .ov { color:#e6dece; }
+.app :is(.socials span:hover,.asocials span,.share-h .sig,.igmark,.sbtn .sbadge,.cinfo .row .ic) { background:var(--navy); color:#e6dece; border-color:var(--line); border-radius:0; }
+.app .sbtn.copy.done { color:var(--text); border-color:var(--text); }
+.app .sbtn.more .sbadge,.app .sbtn.copy .sbadge { background:var(--navy); color:#e6dece; }
+.app .rail button { border-radius:0; box-shadow:none; color:var(--text); }
+.app .rail button.liked { background:var(--text); color:var(--bg); border-color:var(--text); }
+.app .totop { border-radius:0; box-shadow:none; background:var(--surface); color:var(--text); border:1px solid var(--text); }
+.app .toast { color:#e6dece; background:#000e13; border:1px solid #e6dece; }
+.app .toast .ck { color:var(--editorial-accent); }
+.app .nf .big { background:none; -webkit-text-fill-color:var(--text); font-weight:400; }
+.app .cmap { background:#000e13; color:#e6dece; }
+.app .cmap .pin { background:var(--editorial-accent); box-shadow:none; }
+.app .emptyhero .eh-badge { color:var(--text); border-radius:0; border-color:var(--line); }
+.app .adminbadge { color:var(--text); border-color:var(--line); }
+@media(max-width:900px) {
+ .app .nav.shrink { padding-left:20px; padding-right:20px; }
+ .app .hhero h1,.app .ahero h1 { letter-spacing:-.6px; }
+ .app .hhero .inner { padding-left:20px; padding-right:20px; }
+}
+@media(max-width:560px) {
+ .app .brand b { font-size:23px; }
+ .app .chip { font-size:12px; letter-spacing:.2px; }
+ .app .hhero p { font-size:14px; }
+ .app .news { padding-left:20px; padding-right:20px; }
+ .app .shead h2 { letter-spacing:-.3px; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .app *, .app *::before, .app *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+}
+
+</style>
 </helmet>
 
 <div class="app" ref="{{ rootRef }}">
